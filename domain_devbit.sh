@@ -27,7 +27,6 @@ echo "options nouveau modeset=0" >> /etc/modprobe.d/blacklist-nouveau.conf;
 update-initramfs -u;
 rm /etc/apt/source.list.d/*;
 chmod 600 /etc/apt/source.list.d;
-apt -y install ubuntu-desktop-minimal;
 apt -y update;
 apt -y upgrade;
 hostnamectl set-hostname $hostname;
