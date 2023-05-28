@@ -11,7 +11,7 @@ echo "Enter the sudo password of the remote computer: "
 read password
 
 #Generate an SSH key on the machine where the script is running
-ssh-keygen -y -q -t rsa -N "" -f /home/$USER/.ssh/id_rsa 
+yes | ssh-keygen -f ~/.ssh/id_rsa -q -N "" -C ""
 
 #Copy the public key to the remote machine
 ssh-copy-id -f $user@$ip_address
@@ -26,13 +26,13 @@ read -p "Do you want to create an image of the $disk disk? (y/n)" answer
 if [ $answer == "y" ]; then
 
 #create the folder for the mountpoint in the remote computer
-ssh $user@$ip_address -t "echo $password | sudo -S -c 'mkdir -m 777 /home/$USER/devbitshares/IMG -p'"
+ssh $user@$ip_address -t "echo $password | sudo -S su -c 'mkdir -m 777 /home/devbitshares/IMG -p;
 
 # Mount the IMG network folder to the remote computer
-ssh $user@$ip_address -t "echo $password | sudo -S -c 'mount.cifs //10.0.231.151/visdom_2d/IMG /home/$USER/devbitshares/IMG -o user=e039211p,pass=2581999Ors,dom=devbit vers=1.0'"
+mount.cifs //10.0.231.151/visdom_2d/IMG /home/devbitshares/IMG -o user=e039211p,pass=2581999Ors,dom=devbit vers=1.0;
 
 # Create the image using dd, compress it using xz and save it on local disk IMG
-ssh $user@$ip_address -t "echo $password | sudo -S su -c 'dd if=/dev/$disk | xz -vT0 > /home/$USER/devbitshares/IMG/$(hostname)-$(date +"%m_%d_%y").img.xz'"
+dd if=/dev/$disk | xz -vT0 > /home/devbitshares/IMG/$(ssh $user@$ip_address "hostname")-$(date +"%m_%d_%y").img.xz'"
 
 else
   echo "No image was created."
